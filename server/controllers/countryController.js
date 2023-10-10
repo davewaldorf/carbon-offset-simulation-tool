@@ -12,6 +12,13 @@ function getCountryCO2Consumption(req, res) {
   res.json({ countryName, co2Consumption });
 }
 
+// Get the list of country names
+function getCountryNames(req, res) {
+  const countryNames = Country.getCountries();
+  res.json(countryNames);
+}
+
 module.exports = {
-  getCountryCO2Consumption
+  getCountryCO2Consumption,
+  getCountryNames
 };

@@ -14,6 +14,12 @@ function getCountryCO2Consumption(countryName) {
   return countries[countryName] || null;
 }
 
+// Function to get the list of country names
+function getCountries() {
+  return Object.keys(countries);
+}
+
 module.exports = {
-  getCountryCO2Consumption
+  getCountryCO2Consumption,
+  getCountries
 };

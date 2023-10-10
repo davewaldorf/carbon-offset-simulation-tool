@@ -4,7 +4,8 @@ const offsetSimulatorController = require('../controllers/offsetSimulatorControl
 const userOffsetController = require('../controllers/userOffsetController');
 
 // Country routes
-router.get('/country/:countryName', countryController.getCountryCO2Consumption);
+router.get('/countries/:countryName', countryController.getCountryCO2Consumption);
+router.get('/countries', countryController.getCountryNames);
 
 // Offset Simulator routes
 router.post('/offset/simulate', offsetSimulatorController.simulateTreePurchase);
