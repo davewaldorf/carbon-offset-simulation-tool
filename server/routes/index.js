@@ -12,6 +12,11 @@ router.post('/offset/simulate', offsetSimulatorController.simulateTreePurchase);
 router.get('/offset/user/:userId', offsetSimulatorController.getUserOffsets);
 
 // User Offset routes
-router.get('/user/:userId/offsets', userOffsetController.getUserOffsets);
+router.post('/user/:userId/offset', (req, res) => {
+  const { userId } = req.params;
+  const { numberOfTrees } = req.body;
+  const userOffsetResult = userOffsetController.calculateUserOffset(userId, numberOfTrees);
+  res.json(userOffsetResult);
+});
 
 module.exports = router;
