@@ -3,28 +3,21 @@
 import { useForm, Controller } from 'react-hook-form'
 import { getCountryNames } from '@/api/apiService'
 import { useEffect, useState } from 'react'
+import {  userSlice, useSelector, useDispatch } from '@/lib/redux'
 
-const modes = [
-  "Yearly",
-  "Monthly",
-];
 
 export default function Selector() {
-  const { control, handleSubmit } = useForm(
-    {
-      defaultValues: {
-        Countries: "",
-        "Simulation Mode": "",
-      }
-    }
-  )
-  const [countries, setCountries] = useState([])
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
+  const [countries, setCountries] = useState([]);
+  const { control, handleSubmit } = useForm({
+    defaultValues: { country: user.country, mode: user.mode},
+  });
 
   useEffect(() => {
     getCountryNames()
       .then((data) => {
         setCountries(data);
-        console.log(data);
       })
       .catch((error) => {
         console.error(error)
@@ -32,19 +25,17 @@ export default function Selector() {
   }, []);
 
   const onSubmit = (data) => {
-    console.log(data)
+    // Dispatch the action to set the user's country and mode
+    dispatch(userSlice.actions.setCountryAndMode(data));
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="mb-4">
+      <form onSubmit={handleSubmit(onSubmit)} className='mb-10'>
         <Controller
-          name="Countries"
+          name="country"
           control={control}
           render={({ field }) => 
-          <select className="select select-primary w-full max-w-xs" {...field}>
-          <option disabled value="">Country</option>
+          <select className="select select-primary max-w-xs mr-3" {...field}>
           {countries.map((country) => (
             <option  key={country} value={country}>
               {country}
@@ -52,24 +43,16 @@ export default function Selector() {
           ))}
         </select>}
         />
-        </div>
-        <div className="mb-4"> 
          <Controller
-          name="Simulation Mode"
+          name="mode"
           control={control}
           render={({ field }) => 
-          <select className="select select-primary w-full max-w-xs" {...field}>
-          <option disabled value="">Simulation Mode</option>
-          {modes.map((mode) => (
-            <option key={mode} value={mode}>
-              {mode}
-            </option>
-          ))}
+          <select className="select select-primary max-w-xs mr-3" {...field}>
+          <option key="Monthly" value="Monthly">Monthly</option>
+          <option key="Yearly" value="Yearly">Yearly</option>
         </select>}
         />
-        </div>
-        <button className="btn btn-primary">Submit</button>
+        <button className="btn btn-primary mr-5">START</button>
       </form>
-    </div>
   )
 }
