@@ -4,6 +4,7 @@ const userOffsets = [];
 function addUserOffset(userId, numberOfTrees, totalCost, co2Offset, purchaseDate) {
   userOffsets.push({
     userId,
+    country,
     numberOfTrees,
     totalCost,
     co2Offset,

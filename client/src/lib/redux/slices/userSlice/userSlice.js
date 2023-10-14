@@ -3,8 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   userID: null,
   country: 'United States',
+  carbonNeutralityYear: new Date().getFullYear() + 5, 
   mode: 'Monthly',
   purchases: [],
+  carbonOffset : []
 };
 
 export const userSlice = createSlice({
@@ -19,7 +21,10 @@ export const userSlice = createSlice({
       state.mode = action.payload.mode;
     },
     addPurchase: (state, action) => {
-      state.purchases.push(action.payload);
+      state.purchases = (action.payload);
+    },
+    setCarbonOffset: (state, action) => {
+      state.carbonOffset = action.payload;
     },
   },
 });

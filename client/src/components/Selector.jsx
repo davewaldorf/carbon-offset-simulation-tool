@@ -1,9 +1,7 @@
-'use client'
-
 import { useForm, Controller } from 'react-hook-form'
-import { getCountryNames } from '@/api/apiService'
+import { getCountryNames } from '../api/apiService'
 import { useEffect, useState } from 'react'
-import {  userSlice, useSelector, useDispatch } from '@/lib/redux'
+import { userSlice, useSelector, useDispatch } from '../lib/redux'
 
 
 export default function Selector() {

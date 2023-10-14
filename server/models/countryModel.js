@@ -11,7 +11,8 @@ const countries = {
 
 // Function to get average CO2 consumption for a specific country
 function getCountryCO2Consumption(countryName) {
-  return countries[countryName] || null;
+  const consumption = countries[countryName] * 1000 || null;
+  return consumption;
 }
 
 // Function to get the list of country names

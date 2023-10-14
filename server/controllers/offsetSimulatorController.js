@@ -1,5 +1,5 @@
 const Tree = require('../models/treeModel');
-const UserOffset = require('../models/userOffsetModel');
+const UserOffset = require('../models/userModel');
 
 // Simulate tree purchase and calculate future offsets
 function simulateTreePurchase(req, res) {

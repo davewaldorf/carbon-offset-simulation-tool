@@ -4,7 +4,7 @@ const offsetSimulatorController = require('../controllers/offsetSimulatorControl
 const userOffsetController = require('../controllers/userOffsetController');
 
 // Country routes
-router.get('/countries/:countryName', countryController.getCountryCO2Consumption);
+router.get('/countries/:country', countryController.getCountryCO2Consumption);
 router.get('/countries', countryController.getCountryNames);
 
 // Offset Simulator routes
@@ -13,7 +13,7 @@ router.get('/offset/user/:userId', offsetSimulatorController.getUserOffsets);
 
 // User Offset routes
 router.post('/user/:userId/offset', (req, res) => {
-  const { userId } = req.params;
+  const userId = req.se
   const { numberOfTrees } = req.body;
   const userOffsetResult = userOffsetController.calculateUserOffset(userId, numberOfTrees);
   res.json(userOffsetResult);

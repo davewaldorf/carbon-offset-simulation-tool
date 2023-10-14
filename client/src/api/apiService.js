@@ -29,7 +29,7 @@ export async function getCountryNames() {
 // Function to make a POST request to simulate future purchases of carbon offsets
 export async function simulateCarbonOffset(data) {
   try {
-    const response = await fetch(`${baseUrl}/simulate`, {
+    const response = await fetch(`${baseUrl}/offset/simulate`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,9 +48,28 @@ export async function simulateCarbonOffset(data) {
 // Function to make a GET request to visualize simulated future offsets and expenditure
 export async function visualizeOffsets(userId) {
   try {
-    const response = await fetch(`${baseUrl}/visualize/${userId}`);
+    const response = await fetch(`${baseUrl}/offset/user/${userId}`);
     if (!response.ok) {
       throw new Error('Failed to fetch visualized data');
+    }
+    return response.json();
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+// Function to make a POST request to calculate user offset
+export async function calculateUserOffset(userId, numberOfTrees) {
+  try {
+    const response = await fetch(`${baseUrl}/user/${userId}/offset`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ numberOfTrees }),
+    });
+    if (!response.ok) {
+      throw new Error('Failed to calculate user offset');
     }
     return response.json();
   } catch (error) {

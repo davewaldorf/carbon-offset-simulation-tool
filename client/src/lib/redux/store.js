@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import { reducer } from './rootReducer';
 import { useDispatch as useReduxDispatch, useSelector as useReduxSelector } from 'react-redux';
 
-export const reduxStore = configureStore({
+export const store = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

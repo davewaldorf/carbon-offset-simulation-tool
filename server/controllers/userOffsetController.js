@@ -1,4 +1,4 @@
-const UserOffset = require('../models/userOffsetModel');
+const UserOffset = require('../models/userModel');
 
 function calculateUserOffset(userId, numberOfTrees) {
   const initialCost = 120; // Example initial cost per tree ($)
