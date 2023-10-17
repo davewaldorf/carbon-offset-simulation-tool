@@ -11,13 +11,30 @@ const countries = {
 
 // Function to get average CO2 consumption for a specific country
 function getCountryCO2Consumption(countryName) {
-  const consumption = countries[countryName] * 1000 || null;
-  return consumption;
+  try {
+    const consumption = countries[countryName] * 1000;
+    if (!consumption) {
+      throw new Error('Invalid country name');
+    }
+    return consumption;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 
 // Function to get the list of country names
 function getCountries() {
-  return Object.keys(countries);
+  try {
+    const countryNames = Object.keys(countries);
+    if (!countryNames.length) {
+      throw new Error('No countries found');
+    }
+    return countryNames;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
 }
 
 module.exports = {

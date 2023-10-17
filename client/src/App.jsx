@@ -19,12 +19,16 @@ export default function App() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await getChartData(mode, treeEmissions, carbonConsumption);
-      if (data) {
-        setOffsetChart(data.chartData);
-        dispatch(userSlice.actions.setCarbonNeutralityYear(data.carbonNeutrality));
-        const costData = await TreeCostChart(purchases, 10);
-        setCostChart(costData);
+      try {
+        const data = await getChartData(mode, treeEmissions, carbonConsumption);
+        if (data) {
+          setOffsetChart(data.chartData);
+          dispatch(userSlice.actions.setCarbonNeutralityYear(data.carbonNeutrality));
+          const costData = await TreeCostChart(purchases, 10);
+          setCostChart(costData);
+        }
+      } catch (error) {
+        console.error("Error fetching chart data:", error);
       }
     }
     fetchData();

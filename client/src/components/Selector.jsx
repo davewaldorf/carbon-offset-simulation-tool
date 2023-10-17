@@ -35,13 +35,12 @@ export default function Selector() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className='mb-10 mt-10'>
-      <div className="flex flex-col md:flex-row items-center justify-center">
+      <form onSubmit={handleSubmit(onSubmit)} className='mb-10 mt-10'>
         <Controller
           name="country"
           control={control}
           render={({ field }) =>
-            <select className="select select-primary max-w-xs mr-3 mb-3 md:mb-0" {...field}>
+            <select className="select select-primary max-w-xs mr-3" {...field}>
               {countries.map((country) => (
                 <option key={country} value={country}>
                   {country}
@@ -53,13 +52,13 @@ export default function Selector() {
           name="mode"
           control={control}
           render={({ field }) =>
-            <select className="select select-primary max-w-xs mr-3 mb-3 md:mb-0" {...field}>
+            <select className="select select-primary max-w-xs mr-3" {...field}>
               <option key="Monthly" value="Monthly">Monthly</option>
               <option key="Yearly" value="Yearly">Yearly</option>
             </select>}
         />
-        <button className="btn btn-primary">START</button>
-      </div>
-    </form>
+        <button className="btn btn-primary mr-5">START</button>
+      </form>
   )
 }
+
