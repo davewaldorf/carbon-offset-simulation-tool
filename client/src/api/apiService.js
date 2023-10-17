@@ -1,4 +1,4 @@
-const baseUrl = 'http://localhost:4000';
+const baseUrl = 'https://carbon-offset-simulation-tool-server.onrender.com';
 
 // Function to make a GET request to fetch average CO2 consumption for a country
 export async function getCountryCO2(country) {
