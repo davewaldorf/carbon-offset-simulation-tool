@@ -1,12 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+
 const initialState = {
   userID: null,
   country: 'United States',
-  carbonNeutralityYear: new Date().getFullYear() + 5, 
+  carbonNeutrality: new Date().getFullYear() + 3, 
   mode: 'Monthly',
   purchases: [],
-  carbonOffset : []
+  treeEmissions : 0,
+  carbonConsumption: 15520,
 };
 
 export const userSlice = createSlice({
@@ -24,7 +26,13 @@ export const userSlice = createSlice({
       state.purchases = (action.payload);
     },
     setCarbonOffset: (state, action) => {
-      state.carbonOffset = action.payload;
+      state.treeEmissions = action.payload;
+    },
+    setCarbonConsumption: (state, action) => {
+      state.carbonConsumption = action.payload;
+    },
+    setCarbonNeutralityYear: (state, action) => {
+      state.carbonNeutrality = action.payload;
     },
   },
 });

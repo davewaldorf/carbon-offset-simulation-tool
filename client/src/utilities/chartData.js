@@ -1,42 +1,66 @@
-import {userSlice} from '../lib/redux'
-import { getCountryCO2 } from '../api/apiService'
+// This function finds the date when carbon neutrality is reached
+export function findCarbonNeutralityDate(emissionsData, totalCO2Consumption) {
+  let monthlyCO2Consumption = totalCO2Consumption / 12;
+  for (const year in emissionsData) {
+    for (const month in emissionsData[year]) {
+      const monthlyCO2Emission = emissionsData[year][month];
+      if (monthlyCO2Emission >= monthlyCO2Consumption) {
+        return {
+          year: parseInt(year),
+          month: parseInt(month),
+        };
+      }
+    }
+  }
 
-export async function getChartData(dispatch, country, mode) {
-  const data = await getCountryCO2(country);
+  return 'Carbon neutrality not reached within the dataset.';
+}
 
-  // Process data and set it in the Redux store
+// This function generates chart data for the carbon neutrality chart
+export async function getChartData(mode, treeEmissions, carbonConsumption) {
   const isMonthlyMode = mode === 'Monthly';
   const chartData = [];
+  const carbonNeutrality = findCarbonNeutralityDate(treeEmissions, carbonConsumption);
+  let chartDataEndYear = carbonNeutrality.year ? carbonNeutrality.year : new Date().getFullYear() + 3;
+  let chartDataStartYear = chartDataEndYear - 3;
 
   if (isMonthlyMode) {
-    // Process data for monthly mode
-    const currentMonth = new Date().getMonth();
-    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    
-    for (let i = currentMonth; i < currentMonth + 12 * 5; i++) {
-      const year = new Date().getFullYear() + Math.floor(i / 12);
-      const month = monthNames[i % 12];
-      const consumptionPerMonth = data / 12;
-      
-      chartData.push({
-        monthYear: `${month}-${year}`,
-        kgCO2: consumptionPerMonth,
-        treeEmissions: 10, // Calculate based on trees purchased
-      });
+    let currentMonth = (new Date().getFullYear() === chartDataStartYear) ? new Date().getMonth() : 0;
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    let monthsGenerated = 0;
+
+    for (let i = chartDataStartYear; monthsGenerated < 60; i++) {
+      for (let j = currentMonth; j < 12; j++) {
+        const year = i;
+        const month = monthNames[j];
+        const consumptionPerMonth = carbonConsumption / 12;
+        let treeEmissionsForMonth = treeEmissions[year] ? treeEmissions[year][j] || 0 : 0;
+
+        chartData.push({
+          monthYear: `${month}-${year}`,
+          kgCO2: consumptionPerMonth,
+          treeEmissions: treeEmissionsForMonth,
+        });
+
+        monthsGenerated++;
+        if (year == carbonNeutrality.year && j == carbonNeutrality.month) {
+          break;
+        }
+      }
+      currentMonth = 0;
     }
   } else {
-    // Process data for yearly mode
-    for (let i = new Date().getFullYear(); i < new Date().getFullYear() + 5; i++) {
+    for (let i = chartDataStartYear; i <= chartDataEndYear + 1; i++) {
+      const yearlyEmissions = treeEmissions[i] || {}; // Check if data exists for the year
+      const totalYearlyEmissions = Object.values(yearlyEmissions).reduce((acc, value) => acc + value, 0);
       chartData.push({
         monthYear: `${i}`,
-        kgCO2: data,
-        treeEmissions: 10, // Calculate based on trees purchased
+        kgCO2: carbonConsumption,
+        treeEmissions: totalYearlyEmissions,
       });
     }
   }
 
-  dispatch(userSlice.actions.setCarbonOffset(chartData));
-
-  return chartData;
+  return { chartData, carbonNeutrality };
 }
 

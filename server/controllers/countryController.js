@@ -4,7 +4,6 @@ const Country = require('../models/countryModel');
 function getCountryCO2Consumption(req, res) {
   const { country } = req.params;
   const co2Consumption = Country.getCountryCO2Consumption(country);
-  console.log(country, co2Consumption)
 
   if (co2Consumption === null) {
     return res.status(404).json({ error: 'Country not found' });

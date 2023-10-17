@@ -1,36 +1,65 @@
-const UserOffset = require('../models/userModel');
+const Tree = require('../models/treeModel');
 
-function calculateUserOffset(userId, numberOfTrees) {
-  const initialCost = 120; // Example initial cost per tree ($)
-  const annualCostPercentage = 0.10; // Example annual cost as a percentage of the initial cost
-  const co2OffsetPerYear = 28.5; // Example CO2 offset per tree per year (kg)
-  const fullyGrownYear = 6; // Example year when the tree becomes fully grown
+const treeController = {
+  // Calculate the total CO2 offset based on tree purchases
+  calculateTotalCO2Offset: (req, res) => {
+    const treePurchases = req.body.treePurchases;
 
-  // Get the user's country and average CO2 consumption per year
-  const userCountry = getUserCountry(userId);
-  const averageCO2Consumption = getAverageCO2Consumption(userCountry) / 1000; // Convert to tonnes
+    if (!Array.isArray(treePurchases) || treePurchases.length === 0) {
+      return res.status(400).json({ error: 'Invalid tree purchases data' });
+    }
 
-  // Calculate the total cost and CO2 offset of the trees
-  const totalCost = initialCost * numberOfTrees + (initialCost * annualCostPercentage * (fullyGrownYear - 1)) * numberOfTrees;
-  const co2Offset = numberOfTrees * co2OffsetPerYear;
+    // Define a function to calculate CO2 emissions for a tree in a given month
+    const calculateTreeEmissions = (purchase, year, month) => {
+      const purchaseDate = new Date(purchase.month);
+      const treeAgeInMonths = (year - purchaseDate.getFullYear()) * 12 + (month - purchaseDate.getMonth());
+      const isFullyGrown = treeAgeInMonths >= Tree.fullyGrownYear * 12;
 
-  // Calculate the year of carbon neutrality
-  const yearsToCarbonNeutrality = Math.ceil(co2Offset / averageCO2Consumption);
-  const carbonNeutralYear = new Date().getFullYear() + yearsToCarbonNeutrality;
+      let co2Offset = 0;
 
-  // Add user offset data to the UserOffset model
-  UserOffset.addUserOffset(userId, numberOfTrees, totalCost, co2Offset, new Date());
+      if (treeAgeInMonths >= 1) {
+        co2Offset = isFullyGrown
+          ? Tree.fullyGrownYear * Tree.co2OffsetPerYear
+          : treeAgeInMonths * (Tree.co2OffsetPerYear / 12);
+      }
 
-  // Return the calculated results
-  return {
-    numberOfTrees,
-    totalCost,
-    co2Offset,
-    yearsToCarbonNeutrality,
-    carbonNeutralYear
-  };
-}
+      return co2Offset * purchase.trees;
+    };
 
-module.exports = {
-  calculateUserOffset
+    // Find the earliest and latest purchase dates
+    const earliestPurchaseDate = new Date(Math.min(...treePurchases.map((purchase) => new Date(purchase.month))));
+    
+    // Initialize an object to store emissions data for each month in the 20-year range
+    const emissionsData = {};
+
+    // Calculate the end date (20 years after the earliest purchase date)
+    const endDate = new Date(earliestPurchaseDate);
+    endDate.setFullYear(earliestPurchaseDate.getFullYear() + 20);
+
+    // Iterate through tree purchases
+    for (const purchase of treePurchases) {
+      if (purchase.trees <= 0) {
+        continue;
+      }
+
+      // Iterate through months within the 20-year range
+      for (let currentMonth = new Date(earliestPurchaseDate); currentMonth <= endDate; currentMonth.setMonth(currentMonth.getMonth() + 1)) {
+        const year = currentMonth.getFullYear();
+        const month = currentMonth.getMonth();
+
+        if (!emissionsData[year]) {
+          emissionsData[year] = {};
+        }
+
+        if (!emissionsData[year][month]) {
+          emissionsData[year][month] = 0;
+        }
+
+        emissionsData[year][month] += calculateTreeEmissions(purchase, year, month);
+      }
+    }
+    res.json({ emissionsData });
+  }
 };
+
+module.exports = treeController;

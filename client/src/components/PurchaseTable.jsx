@@ -1,29 +1,25 @@
 import { useState } from 'react';
-import 'daisyui/dist/full.css';
+
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+
 import { useDispatch, userSlice } from "../lib/redux";
+import { calculateTotalCO2Offset } from '../api/apiService';
 
 function PurchaseTable() {
   const [orders, setOrders] = useState([
     { id: 1, month: new Date(), trees: 0 },
   ]);
+
   const dispatch = useDispatch();
 
-  const getTotalTreesForYear = (year) => {
-    return orders.reduce((total, order) => {
-      if (order.year === year) {
-        total += order.trees;
-      }
-      return total;
-    }, 0);
-  };
-
-  const handleAddOrder = () => {
+  const handleAddOrder = async () => {
     const newId = orders.length + 1;
     const newOrder = { id: newId, month: new Date(), trees: 0 };
     setOrders([...orders, newOrder]);
     dispatch(userSlice.actions.addPurchase(orders));
+    const { emissionsData } = await calculateTotalCO2Offset(orders);
+    dispatch(userSlice.actions.setCarbonOffset(emissionsData));
   };
 
   const handleDeleteOrder = (id) => {
@@ -32,9 +28,8 @@ function PurchaseTable() {
   };
 
   return (
-    <div className='flex flex-col items-center'>
-      <h1 className="text-3xl mb-4">Purchases</h1>
-
+    <div className='flex flex-col items-center rounded-lg shadow-md w-full max-w-xl p-5'>
+      <h1 className="text-3xl mb-10">Purchases</h1>
       <table className="w-full table-auto">
         <thead>
           <tr>
@@ -69,7 +64,7 @@ function PurchaseTable() {
                   type="number"
                   className="w-full p-2"
                   min="0"
-                  max={55 - getTotalTreesForYear(order.year)}
+                  max={55}
                   value={order.trees}
                   onChange={(e) => {
                     // Handle input change and update the state
@@ -94,7 +89,7 @@ function PurchaseTable() {
       </table>
 
       <div className="text-center">
-        <button className="btn btn-primary" onClick={handleAddOrder}>
+        <button className="btn btn-primary mt-2" onClick={handleAddOrder}>
           + Add Order
         </button>
       </div>
