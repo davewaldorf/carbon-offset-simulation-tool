@@ -34,26 +34,32 @@ function Summary({ costData, treeData, carbonNeutrality }) {
   return (
     <div className="rounded-lg p-10 shadow-md mt-10">
       <h2 className="text-2xl font-bold mb-4 text-center">Summary</h2>
-      <ul>
-        <li className="mb-2">
-          You will reach carbon neutrality in {monthName} {carbonNeutrality.year} with {totalTrees} trees planted.
-        </li>
-        <li className="mb-2">
-          Your monthly maintenance fee at that point is <span className="font-bold">${monthlyMaintenanceFee}</span>.
-        </li>
-      </ul>
-      <ul className="mt-4">
-        <li className="mb-2">
-          Your estimated expenditure over 10 years is <span className="font-bold">${totalCost}</span>.
-        </li>
-        <li className="mb-2">
-          This comprises:
-          <ul className="list-disc ml-4">
-            <li>USD <span className="font-bold">${totalPurchaseCost}</span> in purchase costs.</li>
-            <li>USD <span className="font-bold">${totalMaintenanceCost}</span> in maintenance fees.</li>
+      <div className="flex flex-col md:flex-row">
+        <div className="w-full md:w-1/2">
+          <ul>
+            <li className="mb-2">
+              You will reach carbon neutrality in {monthName} {carbonNeutrality.year} with {totalTrees} trees planted.
+            </li>
+            <li className="mb-2">
+              Your monthly maintenance fee at that point is <span className="font-bold">${monthlyMaintenanceFee}</span>.
+            </li>
           </ul>
-        </li>
-      </ul>
+        </div>
+        <div className="w-full md:w-1/2 mt-4 md:mt-0">
+          <ul>
+            <li className="mb-2">
+              Your estimated expenditure over 10 years is <span className="font-bold">${totalCost}</span>.
+            </li>
+            <li className="mb-2">
+              This comprises:
+              <ul className="list-disc ml-4">
+                <li>USD <span className="font-bold">${totalPurchaseCost}</span> in purchase costs.</li>
+                <li>USD <span className="font-bold">${totalMaintenanceCost}</span> in maintenance fees.</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }

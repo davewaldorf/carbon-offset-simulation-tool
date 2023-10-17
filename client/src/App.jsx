@@ -33,20 +33,20 @@ export default function App() {
   const isCarbonNeutralityReached = carbonNeutrality !== "Carbon neutrality not reached within the dataset.";
 
   return (
-    <main className="bg-accent-content flex min-h-screen flex-col items-center justify-between p-20 font-mono">
-      <h1 className="text-4xl font-semibold mb-4 text-center">Carbon Offset Simulation Tool</h1>
+    <main className="bg-accent-content flex flex-col items-center justify-between p-5 md:p-10 lg:p-20 font-mono">
+      <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-center">Carbon Offset Simulation Tool</h1>
       <div className="max-w w-full items-start justify-between text-sm lg:flex">
-        <div className="lg:w-60% w-full flex flex-col justify-center items-center p-10">
+        <div className="lg:w-60% w-full flex flex-col justify-center items-center p-5 md:p-10 lg:p-20">
           <Selector />
           <PurchaseTable />
           {isCarbonNeutralityReached && (
             <Summary costData={costChart} treeData={purchases} carbonNeutrality={carbonNeutrality} />
           )}
         </div>
-        <div className="lg:w-40% text-center flex flex-col justify-center items-center p-10 mt-20">
-          <h1 className="font-bold ml-10 mt-10">Carbon Offsets</h1>
+        <div className="lg:w-40% w-full text-center flex flex-col justify-center items-center mt-40 p-5">
+          <h1 className="font-bold ml-5 md:ml-10 mt-5 md:mt-10">Carbon Offsets</h1>
           <Chart data={offsetChart} dataKeysAndColors={[{ dataKey: "kgCO2", lineColor: "#FF5733" }, { dataKey: "treeEmissions", lineColor: "#3399FF" }]} />
-          <h1 className="font-bold ml-10">Cumulative Expenditure</h1>
+          <h1 className="font-bold ml-5 md:ml-10 mt-5 md:mt-10">Cumulative Expenditure</h1>
           <Chart data={costChart} dataKeysAndColors={[{ dataKey: "totalCost", lineColor: "#008000" }]} />
         </div>
       </div>

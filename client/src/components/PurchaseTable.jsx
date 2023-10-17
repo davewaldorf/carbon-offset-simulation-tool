@@ -30,63 +30,65 @@ function PurchaseTable() {
   return (
     <div className='flex flex-col items-center rounded-lg shadow-md w-full max-w-xl p-5'>
       <h1 className="text-3xl mb-10">Purchases</h1>
-      <table className="w-full table-auto">
-        <thead>
-          <tr>
-            <th className="w-1/4">#</th>
-            <th className="w-1/4">Month/Year</th>
-            <th className="w-1/4">Trees</th>
-            <th className="w-1/4"></th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((order) => (
-            <tr key={order.id} className='text-center space-between'>
-              <td>{order.id}</td>
-              <td>
-                <DatePicker
-                  selected={order.month}
-                  onChange={(date) => {
-                    // Handle date change and update the state
-                    const updatedOrders = [...orders];
-                    const index = updatedOrders.findIndex((o) => o.id === order.id);
-                    updatedOrders[index].month = date; // Use the full date object
-                    setOrders(updatedOrders);
-                  }}
-                  showMonthYearPicker
-                  dateFormat="MM/yyyy"
-                  className="w-full p-2"
-                />
-
-              </td>
-              <td>
-                <input
-                  type="number"
-                  className="w-full p-2"
-                  min="0"
-                  max={55}
-                  value={order.trees}
-                  onChange={(e) => {
-                    // Handle input change and update the state
-                    const updatedOrders = [...orders];
-                    const index = updatedOrders.findIndex((o) => o.id === order.id);
-                    updatedOrders[index].trees = parseInt(e.target.value);
-                    setOrders(updatedOrders);
-                  }}
-                />
-              </td>
-              <td>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDeleteOrder(order.id)}
-                >
-                  Delete
-                </button>
-              </td>
+      <div className="table-responsive">
+        <table className="w-full table-auto">
+          <thead>
+            <tr>
+              <th className="w-1/4">#</th>
+              <th className="w-1/4">Month/Year</th>
+              <th className="w-1/4">Trees</th>
+              <th className="w-1/4"></th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {orders.map((order) => (
+              <tr key={order.id} className='text-center space-between'>
+                <td>{order.id}</td>
+                <td>
+                  <DatePicker
+                    selected={order.month}
+                    onChange={(date) => {
+                      // Handle date change and update the state
+                      const updatedOrders = [...orders];
+                      const index = updatedOrders.findIndex((o) => o.id === order.id);
+                      updatedOrders[index].month = date; // Use the full date object
+                      setOrders(updatedOrders);
+                    }}
+                    showMonthYearPicker
+                    dateFormat="MM/yyyy"
+                    className="w-full p-2"
+                  />
+
+                </td>
+                <td>
+                  <input
+                    type="number"
+                    className="w-full p-2"
+                    min="0"
+                    max={55}
+                    value={order.trees}
+                    onChange={(e) => {
+                      // Handle input change and update the state
+                      const updatedOrders = [...orders];
+                      const index = updatedOrders.findIndex((o) => o.id === order.id);
+                      updatedOrders[index].trees = parseInt(e.target.value);
+                      setOrders(updatedOrders);
+                    }}
+                  />
+                </td>
+                <td>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDeleteOrder(order.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="text-center">
         <button className="btn btn-primary mt-2" onClick={handleAddOrder}>
